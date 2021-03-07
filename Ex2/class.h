@@ -60,7 +60,6 @@ public:
 	CComplexVector(CComplexVector &&rhs){v=rhs.v;rhs.Clean();}
 
 	size_t Size(){return v.size();}
-	//static CComplexVector *create(int Type, const ComplexNumber *b, const int &nn);
 	virtual ~CComplexVector(){Clean();}
 	virtual void show(const string sf)=0;
 
@@ -91,7 +90,7 @@ public:
 	CComplexVector1(const CComplexVector1 &rhs): CComplexVector(rhs){}
 
 	CComplexVector &operator=(const CComplexVector &rhs){if(this!=&rhs){Clean();CopyOnly(rhs);} return *this;}
-	CComplexVector &operator=(const vector<ComplexNumber> rhs){CopyOnly(rhs); return *this;}
+	CComplexVector &operator=(const vector<ComplexNumber> rhs){Clean();CopyOnly(rhs); return *this;}
 
 	virtual void show(const string sf);
 };
@@ -108,7 +107,7 @@ public:
 	CComplexVector2(const CComplexVector2 &rhs): CComplexVector(rhs){}
 
 	CComplexVector &operator=(const CComplexVector &rhs){if(this!=&rhs){Clean();CopyOnly(rhs);} return *this;}
-	CComplexVector &operator=(const vector<ComplexNumber> rhs){CopyOnly(rhs); return *this;}
+	CComplexVector &operator=(const vector<ComplexNumber> rhs){Clean();CopyOnly(rhs); return *this;}
 
 	virtual void show(const string sf);
 };
