@@ -89,59 +89,46 @@ ComplexNumber operator*(const double &lhs, const ComplexNumber &rhs) {
 
 
 CComplexVector2 operator+(const CComplexVector &lhs, const CComplexVector &rhs){
-	const CComplexVector& ltmp=lhs;
-	const CComplexVector& rtmp=rhs;
-	CComplexVector& lv=const_cast<CComplexVector&>(ltmp);
-	CComplexVector& rv=const_cast<CComplexVector&>(rtmp);
-
-	size_t l=lv.Size();
-	size_t r=rv.Size();
-	if(l>r){
-		CComplexVector2 result(l);
-		for(size_t i=0; i<r; i++){
-			ComplexNumber tmp=lv[i]+rv[i];
+	if(lhs.Size()>rhs.Size()){
+		CComplexVector2 result(lhs.Size());
+		for(size_t i=0; i<rhs.Size(); i++){
+			ComplexNumber tmp=lhs[i]+rhs[i];
 			result.Set(tmp,i);	
 		}
-		for(size_t i=r; i<l; i++)
-			result.Set(lv[i],i);
+		for(size_t i=rhs.Size(); i<lhs.Size(); i++)
+			result.Set(lhs[i],i);
 		return result;
 	}
 	else{
-		CComplexVector2 result(r);
-		for(size_t i=0; i<l; i++){
-			ComplexNumber tmp=lv[i]+rv[i];
+		CComplexVector2 result(rhs.Size());
+		for(size_t i=0; i<lhs.Size(); i++){
+			ComplexNumber tmp=lhs[i]+rhs[i];
 			result.Set(tmp,i);	
 		}
-		for(size_t i=l; i<r; i++)
-			result.Set(rv[i],i);
+		for(size_t i=lhs.Size(); i<rhs.Size(); i++)
+			result.Set(rhs[i],i);
 		return result;
 	}
 }
 CComplexVector2 operator-(const CComplexVector &lhs, const CComplexVector &rhs){
-	const CComplexVector& ltmp=lhs;
-	const CComplexVector& rtmp=rhs;
-	CComplexVector& lv=const_cast<CComplexVector&>(ltmp);
-	CComplexVector& rv=const_cast<CComplexVector&>(rtmp);
-	size_t l=lv.Size();
-	size_t r=rv.Size();
-	if(l>r){
-		CComplexVector2 result(l);
-		for(size_t i=0; i<r; i++){
-			ComplexNumber tmp=lv[i]-rv[i];
+	if(lhs.Size()>rhs.Size()){
+		CComplexVector2 result(lhs.Size());
+		for(size_t i=0; i<rhs.Size(); i++){
+			ComplexNumber tmp=lhs[i]-rhs[i];
 			result.Set(tmp,i);	
 		}
-		for(size_t i=r; i<l; i++)
-			result.Set(lv[i],i);
+		for(size_t i=rhs.Size(); i<lhs.Size(); i++)
+			result.Set(lhs[i],i);
 		return result;
 	}
 	else{
-		CComplexVector2 result(r);
-		for(size_t i=0; i<l; i++){
-			ComplexNumber tmp=lv[i]-rv[i];
+		CComplexVector2 result(rhs.Size());
+		for(size_t i=0; i<lhs.Size(); i++){
+			ComplexNumber tmp=lhs[i]-rhs[i];
 			result.Set(tmp,i);
 		}
-		for(size_t i=l; i<r; i++){
-			ComplexNumber tmp=(-1)*rv[i];
+		for(size_t i=lhs.Size(); i<rhs.Size(); i++){
+			ComplexNumber tmp=(-1)*rhs[i];
 			result.Set(tmp,i);
 		}
 		return result;
@@ -149,21 +136,20 @@ CComplexVector2 operator-(const CComplexVector &lhs, const CComplexVector &rhs){
 }
 
 ComplexNumber operator*(const CComplexVector &lhs, const CComplexVector &rhs){
-	const CComplexVector& ltmp=lhs;
-	const CComplexVector& rtmp=rhs;
-	CComplexVector& lv=const_cast<CComplexVector&>(ltmp);
-	CComplexVector& rv=const_cast<CComplexVector&>(rtmp);
 	ComplexNumber result;
-	rv.Conjugation();
-	size_t l=lv.Size();
-	size_t r=rv.Size();
-	if(l>r){
-		for(size_t i=0; i<r; i++)
-			result=result+lv[i]*rv[i];
+	if(lhs.Size()>rhs.Size()){
+		for(size_t i=0; i<rhs.Size(); i++){
+			ComplexNumber tmp=rhs[i];
+			tmp.Conjugation();
+			result=result+lhs[i]*tmp;
+		}
 	}
 	else{
-		for(size_t i=0; i<l; i++)
-			result=result+lv[i]*rv[i];
+		for(size_t i=0; i<lhs.Size(); i++){
+			ComplexNumber tmp=rhs[i];
+			tmp.Conjugation();
+			result=result+lhs[i]*tmp;
+		}
 	}
 	return result;
 }

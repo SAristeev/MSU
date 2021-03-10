@@ -23,6 +23,7 @@ void TestInheritance(){
 	}
 }
 
+
 int main() {
 	try{
 		//TestComplexNumber();
@@ -65,14 +66,14 @@ void TestComplexVector(){
 	CComplexVector1 v1(a1,5);
 	CComplexVector1 v2(a2,3);
 	CComplexVector1 v3(8),v4;
-	v1.show("out.txt");
-	v2.show("out.txt");
+	v1.show("out1");
+	v2.show("out2");
 	cout << endl;
 	v3=v2+v1;
 	v4=v1-v2;
 	//v3=v2;
-	v3.show("out.txt");
-	v4.show("out.txt");
+	v3.show("out3");
+	v4.show("out4");
 	cout << endl;
 	
 	ComplexNumber b1, b2;
@@ -80,4 +81,5 @@ void TestComplexVector(){
 	cout << b2 << endl;
 	b1=v2*v1;
 	cout << b1 << endl;
-}*/
+}
+*/

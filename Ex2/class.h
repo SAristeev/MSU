@@ -51,7 +51,6 @@ class CComplexVector{
 protected:
 	vector<ComplexNumber> v;
 public:
-	
 	CComplexVector(){}
 	CComplexVector(const int &n){v.resize(n);}
 	CComplexVector(const vector<ComplexNumber> rhs, const int &n){CopyOnly(rhs,n);}
@@ -59,7 +58,7 @@ public:
 	CComplexVector(const CComplexVector &rhs){CopyOnly(rhs);}
 	CComplexVector(CComplexVector &&rhs){v=rhs.v;rhs.Clean();}
 
-	size_t Size(){return v.size();}
+	size_t Size()const{return v.size();}
 	virtual ~CComplexVector(){Clean();}
 	virtual void show(const string sf)=0;
 
@@ -67,7 +66,7 @@ public:
 	CComplexVector &operator=(const vector<ComplexNumber> rhs){CopyOnly(rhs); return *this;}
 	CComplexVector &operator=(CComplexVector &&rhs){if(this!=&rhs){v.clear();v=rhs.v;rhs.Clean();} return *this;}
 
-	ComplexNumber &operator[](size_t i){return v[i];}
+	ComplexNumber &operator[](size_t i)const{return const_cast<ComplexNumber&>(v[i]);}
 
 	void Conjugation(){for(size_t i=0;i<v.size();i++)v[i].Conjugation();}
 	void Set(ComplexNumber rhs, int i){v[i]=rhs;}
