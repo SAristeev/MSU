@@ -53,28 +53,25 @@ protected:
 public:
 	CComplexVector(){}
 	CComplexVector(const int &n){v.resize(n);}
-	CComplexVector(const vector<ComplexNumber> rhs, const int &n){CopyOnly(rhs,n);}
-	CComplexVector(const vector<ComplexNumber> rhs){CopyOnly(rhs);}
-	CComplexVector(const CComplexVector &rhs){CopyOnly(rhs);}
-	CComplexVector(CComplexVector &&rhs){v=rhs.v;rhs.Clean();}
+	CComplexVector(const vector<ComplexNumber> rhs, const int &n){v=rhs; v.resize(n);}
+	CComplexVector(const vector<ComplexNumber> rhs){v=rhs;}
+	CComplexVector(const CComplexVector &rhs){v=rhs.v;}
+	CComplexVector(CComplexVector &&rhs){v=move(rhs.v);}
 
 	size_t Size()const{return v.size();}
-	virtual ~CComplexVector(){Clean();}
+	virtual ~CComplexVector(){}
 	virtual void show(const string sf)=0;
 
-	CComplexVector &operator=(const CComplexVector &rhs){if(this!=&rhs){Clean();CopyOnly(rhs);} return *this;}
-	CComplexVector &operator=(const vector<ComplexNumber> rhs){CopyOnly(rhs); return *this;}
-	CComplexVector &operator=(CComplexVector &&rhs){if(this!=&rhs){v.clear();v=rhs.v;rhs.Clean();} return *this;}
+	CComplexVector &operator=(const CComplexVector &rhs){if(this!=&rhs){v=rhs.v;} return *this;}
+	CComplexVector &operator=(const vector<ComplexNumber> rhs){v=rhs; return *this;}
+	CComplexVector &operator=(CComplexVector &&rhs){if(this!=&rhs){v=move(rhs.v);} return *this;}
 
 	ComplexNumber &operator[](size_t i)const{return const_cast<ComplexNumber&>(v[i]);}
 
 	void Conjugation(){for(size_t i=0;i<v.size();i++)v[i].Conjugation();}
 	void Set(ComplexNumber rhs, int i){v[i]=rhs;}
 
-	void Clean(){v.clear();}
-	void CopyOnly(const CComplexVector &rhs){if(this!=&rhs){v.insert(v.begin(),rhs.v.begin(),rhs.v.end());}}
-	void CopyOnly(const vector<ComplexNumber> rhs, const int &n){v.insert(v.begin(),rhs.begin(),rhs.begin()+n);}
-	void CopyOnly(const vector<ComplexNumber> rhs){v.insert(v.begin(),rhs.begin(),rhs.end());}
+	void CopyOnly(const CComplexVector &rhs){if(this!=&rhs){v=rhs.v;}}
 };
 
 
@@ -85,11 +82,11 @@ class CComplexVector1 : public CComplexVector{
 public:
 	CComplexVector1(): CComplexVector(){};
 	CComplexVector1(const int &n): CComplexVector(n){};
-	CComplexVector1(const vector<ComplexNumber> rhs, const int &n){CopyOnly(rhs,n);}
+	CComplexVector1(const vector<ComplexNumber> rhs, const int &n): CComplexVector(rhs,n){} //{v=rhs; v.resize(n);}
 	CComplexVector1(const CComplexVector1 &rhs): CComplexVector(rhs){}
 
-	CComplexVector &operator=(const CComplexVector &rhs){if(this!=&rhs){Clean();CopyOnly(rhs);} return *this;}
-	CComplexVector &operator=(const vector<ComplexNumber> rhs){Clean();CopyOnly(rhs); return *this;}
+	CComplexVector &operator=(const CComplexVector &rhs){if(this!=&rhs){CopyOnly(rhs);} return *this;}
+	CComplexVector &operator=(const vector<ComplexNumber> rhs){v=rhs; return *this;}
 
 	virtual void show(const string sf);
 };
@@ -102,11 +99,11 @@ class CComplexVector2 : public CComplexVector{
 public:
 	CComplexVector2(): CComplexVector(){};
 	CComplexVector2(const int &n): CComplexVector(n){};
-	CComplexVector2(const vector<ComplexNumber> rhs, const int &n){CopyOnly(rhs,n);}
+	CComplexVector2(const vector<ComplexNumber> rhs, const int &n): CComplexVector(rhs,n){}
 	CComplexVector2(const CComplexVector2 &rhs): CComplexVector(rhs){}
 
-	CComplexVector &operator=(const CComplexVector &rhs){if(this!=&rhs){Clean();CopyOnly(rhs);} return *this;}
-	CComplexVector &operator=(const vector<ComplexNumber> rhs){Clean();CopyOnly(rhs); return *this;}
+	CComplexVector &operator=(const CComplexVector &rhs){if(this!=&rhs){CopyOnly(rhs);} return *this;}
+	CComplexVector &operator=(const vector<ComplexNumber> rhs){v=rhs; return *this;}
 
 	virtual void show(const string sf);
 };

@@ -5,11 +5,7 @@
 #include<string>
 #include<vector>
 using namespace std;
-class CFabricVector;
-
-
-// ==== Class ComplexNumber ========
-
+class CFabrics;
 
 class ComplexNumber{
 	double Re, Im;
@@ -43,56 +39,45 @@ ComplexNumber operator+(const double &lhs, const ComplexNumber &rhs);
 ComplexNumber operator-(const double &lhs, const ComplexNumber &rhs);
 ComplexNumber operator*(const double &lhs, const ComplexNumber &rhs);
 
-
-// ==== Base Class CComplexVector ========
-
-
 class CComplexVector{
 protected:
 	vector<ComplexNumber> w;
 public:
 	CComplexVector(){}
 	CComplexVector(const int &n){w.resize(n);}
-	CComplexVector(const vector<ComplexNumber> rhs, const int &n){CopyOnly(rhs,n);}
-	CComplexVector(const vector<ComplexNumber> rhs){CopyOnly(rhs);}
-	CComplexVector(const CComplexVector &rhs){CopyOnly(rhs);}
-	CComplexVector(CComplexVector &&rhs){w=rhs.w;rhs.Clean();}
+	CComplexVector(const vector<ComplexNumber> rhs, const int &n){w=rhs; w.resize(n);}
+	CComplexVector(const vector<ComplexNumber> rhs){w=rhs;}
+	CComplexVector(const CComplexVector &rhs){w=rhs.w;}
+	CComplexVector(CComplexVector &&rhs){w=move(rhs.w);}
 
 	size_t Size()const{return w.size();}
-	virtual ~CComplexVector(){Clean();}
+	virtual ~CComplexVector(){}
 	virtual void input(const string sf)=0;
+	virtual void input()=0;
 
-	CComplexVector &operator=(const CComplexVector &rhs){if(this!=&rhs){Clean();CopyOnly(rhs);} return *this;}
-	CComplexVector &operator=(const vector<ComplexNumber> rhs){CopyOnly(rhs); return *this;}
-	CComplexVector &operator=(CComplexVector &&rhs){if(this!=&rhs){w.clear();w=rhs.w;rhs.Clean();} return *this;}
+	CComplexVector &operator=(const CComplexVector &rhs){if(this!=&rhs){w=rhs.w;} return *this;}
+	CComplexVector &operator=(const vector<ComplexNumber> rhs){w=rhs; return *this;}
+	CComplexVector &operator=(CComplexVector &&rhs){if(this!=&rhs){w=move(rhs.w);} return *this;}
 
 	ComplexNumber &operator[](size_t i)const{return const_cast<ComplexNumber&>(w[i]);}
 
 	void Conjugation(){for(size_t i=0;i<w.size();i++)w[i].Conjugation();}
 	void Set(ComplexNumber rhs, int i){w[i]=rhs;}
-
-	void Clean(){w.clear();}
 	void CopyOnly(const CComplexVector &rhs){if(this!=&rhs){w=rhs.w;}}
-	void CopyOnly(const vector<ComplexNumber> rhs, const int &n){w.insert(w.begin(),rhs.begin(),rhs.begin()+n);}
-	void CopyOnly(const vector<ComplexNumber> rhs){w=rhs;}
 };
-
-
-// ==== First Child Class CComplexVector1 ========
-
 
 class CComplexVector1 : public CComplexVector{
 public:
 	CComplexVector1(): CComplexVector(){};
 	CComplexVector1(const int &n): CComplexVector(n){};
-	CComplexVector1(const vector<ComplexNumber> rhs, const int &n){CopyOnly(rhs,n);}
-	CComplexVector1(const vector<ComplexNumber> rhs){CopyOnly(rhs);}
+	CComplexVector1(const vector<ComplexNumber> rhs, const int &n): CComplexVector(rhs,n){}
 	CComplexVector1(const CComplexVector1 &rhs): CComplexVector(rhs){}
 
-	CComplexVector &operator=(const CComplexVector &rhs){if(this!=&rhs){Clean();CopyOnly(rhs);} return *this;}
-	CComplexVector &operator=(const vector<ComplexNumber> rhs){Clean();CopyOnly(rhs); return *this;}
+	CComplexVector &operator=(const CComplexVector &rhs){if(this!=&rhs){CopyOnly(rhs);} return *this;}
+	CComplexVector &operator=(const vector<ComplexNumber> rhs){w=rhs; return *this;}
 
 	virtual void input(const string sf);
+	virtual void input();
 };
 
 
@@ -103,14 +88,14 @@ class CComplexVector2 : public CComplexVector{
 public:
 	CComplexVector2(): CComplexVector(){};
 	CComplexVector2(const int &n): CComplexVector(n){};
-	CComplexVector2(const vector<ComplexNumber> rhs, const int &n){CopyOnly(rhs,n);}
-	CComplexVector2(const vector<ComplexNumber> rhs){CopyOnly(rhs);}
+	CComplexVector2(const vector<ComplexNumber> rhs, const int &n): CComplexVector(rhs,n){}
 	CComplexVector2(const CComplexVector2 &rhs): CComplexVector(rhs){}
 
-	CComplexVector &operator=(const CComplexVector &rhs){if(this!=&rhs){Clean();CopyOnly(rhs);} return *this;}
-	CComplexVector &operator=(const vector<ComplexNumber> rhs){Clean();CopyOnly(rhs); return *this;}
+	CComplexVector &operator=(const CComplexVector &rhs){if(this!=&rhs){CopyOnly(rhs);} return *this;}
+	CComplexVector &operator=(const vector<ComplexNumber> rhs){w=rhs; return *this;}
 
 	virtual void input(const string sf);
+	virtual void input();
 };
 
 CComplexVector2 operator+(const CComplexVector &lhs, const CComplexVector &rhs);
@@ -118,14 +103,14 @@ CComplexVector2 operator-(const CComplexVector &lhs, const CComplexVector &rhs);
 ComplexNumber operator*(const CComplexVector &lhs, const CComplexVector &rhs); 
 
 
-class CFabricVector{
+class CFabrics{
 public:
 	virtual CComplexVector *Create() = 0;
 };
 
-class CFabricVector1: public CFabricVector{
+class CFabrics1: public CFabrics{
 	virtual CComplexVector *Create() {return new CComplexVector1;}
 };
-class CFabricVector2: public CFabricVector{
+class CFabrics2: public CFabrics{
 	virtual CComplexVector *Create() {return new CComplexVector2;}
 };

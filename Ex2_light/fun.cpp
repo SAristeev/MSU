@@ -1,9 +1,5 @@
 #include"class.h"
 
-
-// ==== ComplexNumber's Functions ========
-
-
 ostream &operator<<(ostream &stream, const ComplexNumber &number){
 	double Im=number.GetIm(), Re=number.GetRe();
 	if(Re>0 || Re<0){
@@ -20,7 +16,6 @@ ostream &operator<<(ostream &stream, const ComplexNumber &number){
 			stream << 0;}
 	return stream;
 }
-
 istream &operator>>(istream &stream, ComplexNumber &number){
 	string digit;
 	stream >> digit;
@@ -85,53 +80,71 @@ ComplexNumber operator*(const double &lhs, const ComplexNumber &rhs) {
 	return result;
 }
 
-
-// ==== ComplexVector2's Functions ========
-
-
 CComplexVector2 operator+(const CComplexVector &lhs, const CComplexVector &rhs){
-	if(lhs.Size()!=rhs.Size()){
-		throw -1;
+	if(lhs.Size()>rhs.Size()){
+		CComplexVector2 result(lhs.Size());
+		for(size_t i=0; i<rhs.Size(); i++){
+			ComplexNumber tmp=lhs[i]+rhs[i];
+			result.Set(tmp,i);	
+		}
+		for(size_t i=rhs.Size(); i<lhs.Size(); i++)
+			result.Set(lhs[i],i);
+		return result;
 	}
 	else{
-		vector<ComplexNumber> result;
+		CComplexVector2 result(rhs.Size());
 		for(size_t i=0; i<lhs.Size(); i++){
-			result.push_back(lhs[i]+rhs[i]);	
+			ComplexNumber tmp=lhs[i]+rhs[i];
+			result.Set(tmp,i);	
 		}
-		CComplexVector2 tmp(result);
-		return tmp;
+		for(size_t i=lhs.Size(); i<rhs.Size(); i++)
+			result.Set(rhs[i],i);
+		return result;
 	}
 }
 CComplexVector2 operator-(const CComplexVector &lhs, const CComplexVector &rhs){
-	if(lhs.Size()!=rhs.Size()){
-		throw -1;
-	}
-	else{
-		vector<ComplexNumber> result;
-		for(size_t i=0; i<lhs.Size(); i++){
-			result.push_back(lhs[i]-rhs[i]);	
+	if(lhs.Size()>rhs.Size()){
+		CComplexVector2 result(lhs.Size());
+		for(size_t i=0; i<rhs.Size(); i++){
+			ComplexNumber tmp=lhs[i]-rhs[i];
+			result.Set(tmp,i);	
 		}
-		CComplexVector2 tmp(result);
-		return tmp;
-	}
-}
-
-ComplexNumber operator*(const CComplexVector &lhs, const CComplexVector &rhs){
-	if(lhs.Size()!=rhs.Size()){
-		throw -1;
+		for(size_t i=rhs.Size(); i<lhs.Size(); i++)
+			result.Set(lhs[i],i);
+		return result;
 	}
 	else{
-		ComplexNumber result;
+		CComplexVector2 result(rhs.Size());
 		for(size_t i=0; i<lhs.Size(); i++){
-			ComplexNumber tmp=rhs[i];
-			tmp.Conjugation();
-			result=result+lhs[i]*tmp;
+			ComplexNumber tmp=lhs[i]-rhs[i];
+			result.Set(tmp,i);
+		}
+		for(size_t i=lhs.Size(); i<rhs.Size(); i++){
+			ComplexNumber tmp=(-1)*rhs[i];
+			result.Set(tmp,i);
 		}
 		return result;
 	}
 }
 
-// ==== Show Functions ========
+ComplexNumber operator*(const CComplexVector &lhs, const CComplexVector &rhs){
+	ComplexNumber result;
+	if(lhs.Size()>rhs.Size()){
+		for(size_t i=0; i<rhs.Size(); i++){
+			ComplexNumber tmp=rhs[i];
+			tmp.Conjugation();
+			result=result+lhs[i]*tmp;
+		}
+	}
+	else{
+		for(size_t i=0; i<lhs.Size(); i++){
+			ComplexNumber tmp=rhs[i];
+			tmp.Conjugation();
+			result=result+lhs[i]*tmp;
+		}
+	}
+	return result;
+}
 
 
 void CComplexVector1::input(const string sf){
@@ -154,4 +167,20 @@ void CComplexVector2::input(const string sf){
 	}
 	out << ")" << endl;
 	out.close();
+}
+
+void CComplexVector1::input(){
+	cin << "Type-1(";
+	for(size_t i=0; i<w.size();i++){
+		cin << w[i] << " ";
+	}
+	cin << ")" << endl;
+}
+
+void CComplexVector2::input(const string sf){
+	cin << "Type-2(";
+	for(size_t i=0; i<w.size();i++){
+		cin << w[i] << " ";
+	}
+	cin << ")" << endl;
 }
