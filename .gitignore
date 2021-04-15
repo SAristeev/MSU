@@ -1,4 +1,7 @@
 *.o
+*.log
+*.aux
+*.gz
 prog
 out*
 vgcore*
