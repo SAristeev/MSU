@@ -1,5 +1,4 @@
 *.o
 prog
 out*
-in*
 vgcore*
