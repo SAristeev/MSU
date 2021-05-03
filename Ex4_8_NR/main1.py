@@ -1,22 +1,28 @@
 import sys
-from PIL import Image, ImageDraw
-im1=Image.open(sys.argv[1])
-im2=Image.open(sys.argv[2])
-x1,y1=im1.size
-x2,y2=im2.size
-px1=im1.load()
-px2=im2.load()
-imout=Image.new("RGB", (x1, y1), (0, 0, 0))
-pxout=imout.load()
-for i in range(x1):
-	for j in range(y1):
-		r1,b1,g1=px1[i,j]
-		r2,b2,g2=px2[i,j]
-		br1=(r1+b1+g1)//3
-		br2=(r2+b2+g2)//3
+from scipy import misc
+from numpy import uint8
+from imageio import imread
+from imageio import imwrite
+
+im1=imread(sys.argv[1])
+im2=imread(sys.argv[2])
+h=len(im1)
+w=len(im1[0])
+imout=[i for i in range(0,h)]
+for iy in range(0,h):
+	imout[iy]=[i for i in range(0,w)]
+
+for iy1 in range(0,h):
+	for ix1 in range(0,w):
+		br1=(im1[iy1][ix1][0]+0+im1[iy1][ix1][1]+im1[iy1][ix1][2])//3
+		br2=(im2[iy1][ix1][0]+0+im2[iy1][ix1][1]+im2[iy1][ix1][2])//3
 		if br1==0:
-			r,b,g=0,0,0
+			imout[iy1][ix1]=[uint8(0),uint8(0),uint8(0)]
 		else:
-			r,b,g=r1*br2//br1,b1*br2//br1,g1*br2//br1
-		pxout[i,j]=r,b,g
-imout.save(sys.argv[3])
+			v=br2/br1
+			r=im1[iy1][ix1][0]*v
+			b=im1[iy1][ix1][1]*v
+			g=im1[iy1][ix1][2]*v
+			imout[iy1][ix1]=[uint8(r),uint8(b),uint8(g)]
+
+imwrite(sys.argv[3],imout,format='bmp')
